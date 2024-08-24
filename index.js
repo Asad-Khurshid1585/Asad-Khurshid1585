@@ -15,7 +15,7 @@ const knex = require('knex')({
 const sha256 = require("js-sha256");
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 8080;
 const bodyparser = require("body-parser");
 const session = require('express-session');
 
