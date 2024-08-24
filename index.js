@@ -1,11 +1,11 @@
 const knex = require('knex')({
     client: 'mysql',
     connection: {
-      host: 'localhost',
+      host: 'bowrzlfyl9fjknk7g5v8-mysql.services.clever-cloud.com',
       port: 3306,
-      user: 'root',
-      password: 'root',
-      database: 'test',
+      user: 'u6gvvm1okumfb4mi',
+      password: 'WCYBQ1GQSOZFLkdpIYPY',
+      database: 'bowrzlfyl9fjknk7g5v8',
     },
     pool: { min: 0, max: 7 },
     migrations: {
