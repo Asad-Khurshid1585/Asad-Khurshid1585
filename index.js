@@ -46,7 +46,7 @@ app.post('/person', async (req, res) => {
     password = sha256(password);
     try {
         await knex('person').insert({ id: ID, username, password });
-        res.status(201).json({ message: 'Row inserted successfully' });
+        res.status(201).json({ message: 'User Registered Successfully.' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to insert data into the database' });
     }
@@ -69,8 +69,6 @@ app.post('/login', async(req, res) => {
 });
 
 app.use((req, res, next) => {
-    var{username, password} = req.body;
-    password = sha256(password);
     if (!req.session.authenticated) {
         return res.status(400).json({ error: "Not Logged In" });
     }
