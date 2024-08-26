@@ -77,9 +77,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use((req, res, next) => {
+app.use(async(req, res, next) => {
     var{username, password} = req.body;
     password = sha256(password);
+    const data = await knex('person').where({ username }).first();
     if (!data || data.password !== password) {
         return res.status(400).json({ error: 'Password didn\'t Match' });
     }
