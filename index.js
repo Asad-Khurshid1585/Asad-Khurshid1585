@@ -68,18 +68,30 @@ app.post('/login', async(req, res) => {
     else res.status(403).json({error: "User not found"});
 });
 
+app.use((req, res, next) => {
+    var{username, password} = req.body;
+    password = sha256(password);
+    if (!req.session.authenticated) {
+        return res.status(400).json({ error: "Not Logged In" });
+    }
+    next();
+});
+
+app.use((req, res, next) => {
+    var{username, password} = req.body;
+    password = sha256(password);
+    if (!data || data.password !== password) {
+        return res.status(400).json({ error: 'Password didn\'t Match' });
+    }
+    next();
+});
+
 app.patch('/updatePass', async (req, res) => {
     try {
         var { username, password, newPass } = req.body;
         password = sha256(password);
         newPass = sha256(newPass);
-        if (!req.session.authenticated) {
-            return res.status(404).json({ error: "Not Logged In" });
-        }
         const data = await knex('person').where({ username }).first();
-        if (!data || data.password !== password) {
-            return res.status(404).json({ error: 'Password didn\'t Match' });
-        }
         await knex('person').where({ username }).update({ password: newPass });
         res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
