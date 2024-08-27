@@ -61,7 +61,7 @@ app.get('/person', async (req, res) => {
 });
 
 const validateSignUp = (req, res, next) => {
-    var { username, password } = req.body;
+    var { email, password } = req.body;
     const error = validatePassword(password, res);
     if (error) return;
     next();
@@ -79,11 +79,11 @@ app.post('/signup', validateSignUp, async (req, res) => {
 });
 
 app.post('/login', async(req, res) => {
-    var {username, password} = req.body;
+    var {email, password} = req.body;
     password = sha256(password);
-    const data = await knex('person').where({ username }).first();
+    const data = await knex('person').where({ email }).first();
     if (data){
-        if (username == data.username && password == data.password){
+        if (email == data.email && password == data.password){
             req.session.authenticated = true;
             res.status(200).json({message: "Ok Logged in."});
         }
@@ -98,9 +98,9 @@ const validateUpdatePass = async(req,res,next) => {
     if (!req.session.authenticated) {
         return res.status(400).json({ error: "Not Logged In" });
     }
-    var { username, password, newPass } = req.body;
+    var { email, password, newPass } = req.body;
     password = sha256(password);
-    const data = await knex('person').where({ username }).first();
+    const data = await knex('person').where({ email }).first();
     if (!data || data.password !== password) {
         return res.status(400).json({ error: 'Password didn\'t Match' });
     }
@@ -111,11 +111,11 @@ const validateUpdatePass = async(req,res,next) => {
 
 app.patch('/updatePass', validateUpdatePass, async (req, res) => {
     try {
-        var { username, password, newPass } = req.body;
+        var { email, password, newPass } = req.body;
         password = sha256(password);
         newPass = sha256(newPass);
-        const data = await knex('person').where({ username }).first();
-        await knex('person').where({ username }).update({ password: newPass });
+        const data = await knex('person').where({ email }).first();
+        await knex('person').where({ email }).update({ password: newPass });
         res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
         console.error(error);
