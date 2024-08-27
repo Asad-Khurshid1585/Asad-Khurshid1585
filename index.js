@@ -104,7 +104,6 @@ const validateUpdatePass = async(req,res,next) => {
     if (!data || data.password !== password) {
         return res.status(400).json({ error: 'Password didn\'t Match' });
     }
-    var { username, password, newPass } = req.body;
     const error = validatePassword(newPass, res);
     if (error) return;
     next();
