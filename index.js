@@ -41,11 +41,11 @@ app.get('/person', async (req, res) => {
     }
 });
 
-app.post('/person', async (req, res) => {
-    var { username, password, ID } = req.body;
+app.post('/signup', async (req, res) => {
+    var { email, password } = req.body;
     password = sha256(password);
     try {
-        await knex('person').insert({ id: ID, username, password });
+        await knex('person').insert({ email, password });
         res.status(201).json({ message: 'User Registered Successfully.' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to insert data into the database' });
