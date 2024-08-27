@@ -43,7 +43,7 @@ app.get('/person', async (req, res) => {
 
 const validatePasswordSignup = (req,res,next) => {
     var { username, password } = req.body;
-    if (password.length() < 8){
+    if (password.length < 8){
         return res.status(400).json({error: "Password must be atleast 8 chracters long"});
     }
     if(password.search(/[a-z]/) === -1){
