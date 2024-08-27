@@ -1,4 +1,2 @@
-const sha256 = require("js-sha256");
-
-var hash = sha256("hello");
-console.log(hash);
+var str = "asad";
+console.log(str.search(/[a-z]/i));

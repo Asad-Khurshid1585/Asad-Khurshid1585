@@ -41,7 +41,24 @@ app.get('/person', async (req, res) => {
     }
 });
 
-app.post('/signup', async (req, res) => {
+const validatePasswordSignup = (req,res,next) => {
+    var { username, password } = req.body;
+    if (password.length() < 8){
+        return res.status(400).json({error: "Password must be atleast 8 chracters long"});
+    }
+    if(password.search(/[a-z]/) === -1){
+        return res.status(400).json({error: "Password must contain at least one lower case letter"});
+    }
+    if(password.search(/[A-Z]/) === -1){
+        return res.status(400).json({error: "Password must contain at least one upper case letter"});
+    }
+    if(password.search(/[0-9]/i) === -1){
+        return res.status(400).json({error: "Password must contain at least one number"});
+    }
+    next();
+};
+
+app.post('/signup', validatePasswordSignup, async (req, res) => {
     var { email, password } = req.body;
     password = sha256(password);
     try {
@@ -67,14 +84,14 @@ app.post('/login', async(req, res) => {
     }
     else res.status(403).json({error: "User not found"});
 });
-
+// middleware to check if the user requesting updatePass is logged in or not
 app.use((req, res, next) => {
     if (!req.session.authenticated) {
         return res.status(400).json({ error: "Not Logged In" });
     }
     next();
 });
-
+// middleware to check if the old password matches
 app.use(async(req, res, next) => {
     var{username, password} = req.body;
     password = sha256(password);
@@ -84,8 +101,24 @@ app.use(async(req, res, next) => {
     }
     next();
 });
-
-app.patch('/updatePass', async (req, res) => {
+// middleware to check if the newPass matches the criteria of the password
+const validatePasswordUpdate = (req,res,next) => {
+    var { username, password, newPass } = req.body;
+    if (newPass.length() < 8){
+        return res.status(400).json({error: "Password must be atleast 8 chracters long"});
+    }
+    if(newPass.search(/[a-z]/) === -1){
+        return res.status(400).json({error: "Password must contain at least one lower case letter"});
+    }
+    if(newPass.search(/[A-Z]/) === -1){
+        return res.status(400).json({error: "Password must contain at least one upper case letter"});
+    }
+    if(newPass.search(/[0-9]/i) === -1){
+        return res.status(400).json({error: "Password must contain at least one number"});
+    }
+    next();
+};
+app.patch('/updatePass', validatePasswordUpdate, async (req, res) => {
     try {
         var { username, password, newPass } = req.body;
         password = sha256(password);
