@@ -104,7 +104,7 @@ app.use(async(req, res, next) => {
 // middleware to check if the newPass matches the criteria of the password
 const validatePasswordUpdate = (req,res,next) => {
     var { username, password, newPass } = req.body;
-    if (newPass.length() < 8){
+    if (newPass.length < 8){
         return res.status(400).json({error: "Password must be atleast 8 chracters long"});
     }
     if(newPass.search(/[a-z]/) === -1){
