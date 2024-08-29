@@ -9,8 +9,7 @@ const knex = require('knex')({
     },
     pool: { min: 0, max: 7 },
     migrations: {
-        tableName: 'person',
-        tableName: 'airportData'
+        tableNames: ['person', 'airportData']
     },
 });
 const sha256 = require("js-sha256");
