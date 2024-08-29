@@ -131,7 +131,7 @@ app.use((req,res, next) =>{
 });
 
 app.get('/airports/search', async (req, res) => {
-    var { name } = req.body;
+    var { name } = req.query;;
     try {
         const data = await knex('airportData').where({ IataCode: name }).first();
         if (data) {
