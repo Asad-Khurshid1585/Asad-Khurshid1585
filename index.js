@@ -130,8 +130,8 @@ app.use((req,res, next) =>{
     next();
 });
 
-app.get('/airports/search', async(req,res) => {
-    var {name} = req.body;
+app.get('/airports/search', async (req, res) => {
+    var { name } = req.body;
     try {
         const data = await knex('airportData').where({ IataCode: name }).first();
         if (data) {
@@ -140,6 +140,7 @@ app.get('/airports/search', async(req,res) => {
             res.status(404).json({ error: 'Airport not found' });
         }
     } catch (error) {
+        console.error('Database error:', error); // Log the error
         res.status(500).json({ error: 'Failed to fetch data from the database' });
     }
 });
