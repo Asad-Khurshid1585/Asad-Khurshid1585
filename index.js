@@ -10,6 +10,7 @@ const knex = require('knex')({
     pool: { min: 0, max: 7 },
     migrations: {
         tableName: 'person',
+        tableName: 'airportData'
     },
 });
 const sha256 = require("js-sha256");
@@ -120,6 +121,27 @@ app.patch('/updatePass', validateUpdatePass, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.use((req,res, next) =>{
+    if (!req.session.authenticated) {
+        return res.status(400).json({ error: "Not Logged In" });
+    }
+    next();
+});
+
+app.get('/airports/search', async(req,res) => {
+    var {name} = req.body;
+    try {
+        const data = await knex('airportData').where({ IataCode: name }).first();
+        if (data) {
+            res.json(data);
+        } else {
+            res.status(404).json({ error: 'Airport not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch data from the database' });
     }
 });
 
